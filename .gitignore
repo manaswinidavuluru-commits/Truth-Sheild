@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.env
+.venv/
+env/
+venv/
+
+# Uploads temporary files (keep forensics and placeholder)
+uploads/temp/*
+!uploads/temp/.gitkeep
+!uploads/forensics/.gitkeep
+
+# Database (keep schema, ignore local runtime DB)
+*.db-journal
+*.sqlite3-journal
+
+# IDE
+.vscode/
+.idea/
