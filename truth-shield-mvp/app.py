@@ -14,7 +14,7 @@ from dotenv import load_dotenv
 # Load environment variables
 load_dotenv()
 
-from database.db import save_report, get_report, get_recent_reports, init_db
+from database.db import save_report, get_report, get_recent_reports, init_db, add_confirmation, get_confirmations_for_report
 from services.factcheck import verify_news_claim
 from services.forensics import run_image_investigation, run_video_investigation
 
@@ -348,6 +348,59 @@ def api_reports():
     """Returns recent reports in JSON format."""
     recent = get_recent_reports(limit=10)
     return jsonify({"reports": recent})
+
+@app.route("/report/<report_id>/confirm", methods=["POST"])
+def confirm_report(report_id):
+    """Handles submission of an official peer investigator confirmation."""
+    report = get_report(report_id)
+    if not report:
+        if request.headers.get("X-Requested-With") == "XMLHttpRequest" or request.is_json:
+            return jsonify({"error": "Report not found."}), 404
+        flash("Report not found.", "danger")
+        return redirect(url_for("index"))
+        
+    reviewer_name = request.form.get("reviewer_name", "").strip()
+    reviewer_role = request.form.get("reviewer_role", "").strip()
+    organization = request.form.get("organization", "").strip()
+    confirmation_status = request.form.get("confirmation_status", "").strip()
+    peer_review_notes = request.form.get("peer_review_notes", "").strip()
+    methodology = request.form.getlist("methodology[]") or request.form.getlist("methodology")
+    
+    if not reviewer_name or not reviewer_role or not confirmation_status or not peer_review_notes:
+        err_msg = "Please fill in all required confirmation fields (Name, Role, Status, and Review Notes)."
+        if request.headers.get("X-Requested-With") == "XMLHttpRequest" or request.is_json:
+            return jsonify({"error": err_msg}), 400
+        flash(err_msg, "warning")
+        return redirect(url_for("view_report", report_id=report_id))
+        
+    conf_result = add_confirmation(
+        report_id=report_id,
+        reviewer_name=reviewer_name,
+        reviewer_role=reviewer_role,
+        organization=organization or "Independent Investigator",
+        confirmation_status=confirmation_status,
+        peer_review_notes=peer_review_notes,
+        methodology_checklist=methodology
+    )
+    
+    if request.headers.get("X-Requested-With") == "XMLHttpRequest" or request.is_json:
+        return jsonify({
+            "success": True,
+            "confirmation_id": conf_result["confirmation_id"],
+            "digital_signature": conf_result["digital_signature"],
+            "redirect_url": url_for("view_report", report_id=report_id) + "#confirmation-section"
+        })
+        
+    flash("Peer investigator confirmation recorded with digital cryptographic seal.", "success")
+    return redirect(url_for("view_report", report_id=report_id) + "#confirmation-section")
+
+@app.route("/report/<report_id>/certificate")
+def view_certificate(report_id):
+    """Renders an official, printable Certificate of Verification with digital seal."""
+    report = get_report(report_id)
+    if not report:
+        return render_template("results.html", error=f"Report '{report_id}' was not found."), 404
+    return render_template("certificate.html", report=report)
 
 @app.route("/uploads/forensics/<path:filename>")
 def serve_forensic_file(filename):

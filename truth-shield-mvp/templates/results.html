@@ -63,6 +63,9 @@
             </div>
             <div class="meta-right">
                 <span class="timestamp-text">Generated: {{ report.created_at }}</span>
+                <a href="/report/{{ report.report_id }}/certificate" class="action-pill-btn cert-highlight-btn">
+                    📜 Official Certificate
+                </a>
                 <button type="button" class="action-pill-btn" id="copy-report-link-btn">
                     📋 Copy Link
                 </button>
@@ -74,6 +77,41 @@
                 </button>
             </div>
         </div>
+
+        <!-- Confirmation Status Banner -->
+        {% if report.confirmation_status and report.confirmation_status != 'PENDING' %}
+        <div class="confirmation-status-banner status-{{ report.confirmation_status|lower }}">
+            <div class="status-banner-left">
+                <span class="status-icon">
+                    {% if 'AUTHENTIC' in report.confirmation_status %}🛡️{% elif 'MANIPULATED' in report.confirmation_status %}⚠️{% elif 'DISPUTED' in report.confirmation_status %}⚖️{% else %}🔍{% endif %}
+                </span>
+                <div class="status-banner-text">
+                    <span class="status-title">PEER INVESTIGATOR CONFIRMATION</span>
+                    <strong class="status-name">{{ report.confirmation_status|replace('_', ' ') }}</strong>
+                    {% if report.confirmations %}
+                    <span class="status-reviewer">Certified by {{ report.confirmations[0].reviewer_name }} ({{ report.confirmations[0].reviewer_role }} • {{ report.confirmations[0].organization }})</span>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="status-banner-right">
+                <a href="#confirmation-section" class="jump-confirm-btn">View Audit Trail ↓</a>
+            </div>
+        </div>
+        {% else %}
+        <div class="confirmation-status-banner status-pending">
+            <div class="status-banner-left">
+                <span class="status-icon">⏳</span>
+                <div class="status-banner-text">
+                    <span class="status-title">INVESTIGATOR WORKFLOW</span>
+                    <strong class="status-name">AWAITING PEER REVIEW CONFIRMATION</strong>
+                    <span class="status-reviewer">Automated heuristics complete. Credentialed researchers may confirm or dispute this investigation below.</span>
+                </div>
+            </div>
+            <div class="status-banner-right">
+                <a href="#confirmation-section" class="jump-confirm-btn">Add Confirmation Review ↓</a>
+            </div>
+        </div>
+        {% endif %}
 
         <!-- Subject Investigated Card -->
         <div class="subject-card">
@@ -255,6 +293,148 @@
                 <p>No verifiable third-party records were discovered for this investigation.</p>
             </div>
             {% endif %}
+        </section>
+
+        <!-- Investigator Confirmation & Peer Review Section -->
+        <section class="confirmation-section-card" id="confirmation-section">
+            <div class="card-header-bar">
+                <div class="header-title-group">
+                    <span class="section-icon">⚖️</span>
+                    <h2>Investigator Peer Confirmation & Audit Ledger</h2>
+                </div>
+                <div class="header-actions">
+                    <a href="/report/{{ report.report_id }}/certificate" class="action-pill-btn cert-highlight-btn">
+                        📜 View Official Certificate
+                    </a>
+                </div>
+            </div>
+
+            <!-- Existing Peer Reviews / Audit Trail -->
+            <div class="confirmations-history">
+                <h3 class="sub-header-title">Certified Peer Reviewers & Sign-offs</h3>
+                {% if report.confirmations %}
+                    <div class="confirmations-list">
+                        {% for c in report.confirmations %}
+                        <div class="confirmation-item-card status-border-{{ c.confirmation_status|lower }}">
+                            <div class="conf-top">
+                                <div class="reviewer-badge-info">
+                                    <span class="conf-avatar">🛡️</span>
+                                    <div>
+                                        <strong class="conf-reviewer-name">{{ c.reviewer_name }}</strong>
+                                        <span class="conf-reviewer-role">{{ c.reviewer_role }} • {{ c.organization }}</span>
+                                    </div>
+                                </div>
+                                <span class="verdict-pill pill-status-{{ c.confirmation_status|lower }}">
+                                    {{ c.confirmation_status|replace('_', ' ') }}
+                                </span>
+                            </div>
+
+                            <div class="conf-notes">
+                                <p>{{ c.peer_review_notes }}</p>
+                            </div>
+
+                            {% if c.checklist %}
+                            <div class="conf-checklist-tags">
+                                {% for tag in c.checklist %}
+                                <span class="method-mini-tag">✓ {{ tag }}</span>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+
+                            <div class="conf-footer">
+                                <span class="conf-timestamp">Signed: {{ c.created_at }}</span>
+                                <div class="crypto-seal-pill" title="Cryptographic SHA-256 Seal">
+                                    <span class="seal-lock">🔒 SHA-256:</span>
+                                    <code class="seal-hash-short">{{ c.digital_signature[:16] }}...{{ c.digital_signature[-8:] }}</code>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="empty-confirmations-box">
+                        <span class="empty-icon">📝</span>
+                        <p>No peer investigator reviews have been registered for this report yet.</p>
+                        <span class="empty-hint">Use the verification form below to record an official confirmation or dispute finding.</span>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Investigator Submission Form -->
+            <div class="confirmation-form-container">
+                <div class="form-header-intro">
+                    <h3>Submit Peer Confirmation / Review</h3>
+                    <p>Credentialed journalists, analysts, and OSINT researchers can certify, qualify, or dispute automated findings. Submissions receive a cryptographic SHA-256 audit seal.</p>
+                </div>
+
+                <form id="peer-confirmation-form" action="/report/{{ report.report_id }}/confirm" method="POST" class="confirmation-form">
+                    <div class="form-grid-2">
+                        <div class="form-group">
+                            <label for="conf-reviewer-name" class="form-label">Reviewer Full Name <span class="required">*</span></label>
+                            <input type="text" id="conf-reviewer-name" name="reviewer_name" class="form-control" placeholder="e.g. Alex Morgan" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="conf-reviewer-role" class="form-label">Professional Role / Title <span class="required">*</span></label>
+                            <input type="text" id="conf-reviewer-role" name="reviewer_role" class="form-control" placeholder="e.g. Senior Fact-Checker, Forensic Analyst" required>
+                        </div>
+                    </div>
+
+                    <div class="form-grid-2">
+                        <div class="form-group">
+                            <label for="conf-organization" class="form-label">Affiliated Organization / Newsroom</label>
+                            <input type="text" id="conf-organization" name="organization" class="form-control" placeholder="e.g. IFCN Network, Independent OSINT, Local Press">
+                        </div>
+                        <div class="form-group">
+                            <label for="conf-status" class="form-label">Confirmation Determination <span class="required">*</span></label>
+                            <select id="conf-status" name="confirmation_status" class="form-control select-control" required>
+                                <option value="" disabled selected>Select confirmation determination...</option>
+                                <option value="CONFIRMED_AUTHENTIC">🟢 Confirm as Authentic & Verified</option>
+                                <option value="CONFIRMED_MANIPULATED">🔴 Confirm as Manipulated / Misleading</option>
+                                <option value="CONFIRMED_UNVERIFIED">⚪ Confirm as Inconclusive / Unable to Verify</option>
+                                <option value="DISPUTED">🟡 Dispute Automated Finding (Overrule)</option>
+                                <option value="NEEDS_EVIDENCE">🔵 Flag for Additional Evidence</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Methodologies Applied -->
+                    <div class="form-group">
+                        <label class="form-label">Verification Methodologies Applied:</label>
+                        <div class="checkbox-options-grid">
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="methodology[]" value="Primary Source Verification"> Primary Source Verification
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="methodology[]" value="Error Level Analysis (ELA)"> Error Level Analysis (ELA)
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="methodology[]" value="Reverse Image / Frame Search"> Reverse Visual Search
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="methodology[]" value="EXIF Metadata Audit"> EXIF Metadata Audit
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="methodology[]" value="IFCN Fact-Check Archive"> IFCN Archive Corroboration
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="methodology[]" value="Subject / Press Inquiry"> Direct Subject / Press Inquiry
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="conf-notes" class="form-label">Peer Review Findings & Rationale <span class="required">*</span></label>
+                        <textarea id="conf-notes" name="peer_review_notes" rows="4" class="form-control" placeholder="Document empirical findings, corroborating URLs, or reasons for confirmation/dispute..." required></textarea>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="primary-btn" id="submit-confirmation-btn">
+                            <span class="btn-text">🔒 Seal & Confirm Verification</span>
+                            <span class="btn-arrow">→</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
         </section>
 
         <!-- Methodological Limitations -->

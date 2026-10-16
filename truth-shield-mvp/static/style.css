@@ -1540,3 +1540,727 @@ textarea.form-control {
         align-items: flex-start;
     }
 }
+
+/* ==========================================================================
+   Investigator Confirmation & Peer Review System Styles
+   ========================================================================== */
+
+.cert-highlight-btn {
+    background: rgba(16, 185, 129, 0.15) !important;
+    border-color: var(--primary-green) !important;
+    color: var(--emerald-bright) !important;
+    font-weight: 700 !important;
+}
+
+.cert-highlight-btn:hover {
+    background: var(--primary-green) !important;
+    color: #042419 !important;
+    box-shadow: 0 0 12px rgba(16, 185, 129, 0.4);
+}
+
+/* Confirmation Status Banner */
+.confirmation-status-banner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: var(--radius-lg);
+    padding: 1.15rem 1.6rem;
+    margin-bottom: 1.5rem;
+    border: 1px solid;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+}
+
+.status-confirmed_authentic {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(6, 78, 59, 0.25) 100%);
+    border-color: var(--primary-green);
+}
+
+.status-confirmed_manipulated {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(127, 29, 29, 0.25) 100%);
+    border-color: #EF4444;
+}
+
+.status-disputed {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(120, 53, 15, 0.25) 100%);
+    border-color: #F59E0B;
+}
+
+.status-needs_evidence {
+    background: linear-gradient(135deg, rgba(56, 189, 248, 0.15) 0%, rgba(12, 74, 110, 0.25) 100%);
+    border-color: #38BDF8;
+}
+
+.status-pending {
+    background: var(--bg-card);
+    border-color: var(--dark-green-border);
+}
+
+.status-banner-left {
+    display: flex;
+    align-items: center;
+    gap: 1.1rem;
+}
+
+.status-icon {
+    font-size: 2rem;
+    line-height: 1;
+}
+
+.status-banner-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+}
+
+.status-title {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    color: var(--text-muted);
+    font-weight: 700;
+}
+
+.status-name {
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--text-white);
+    letter-spacing: -0.01em;
+}
+
+.status-reviewer {
+    font-size: 0.82rem;
+    color: var(--emerald-light);
+}
+
+.jump-confirm-btn {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: var(--text-white);
+    font-size: 0.82rem;
+    font-weight: 600;
+    padding: 0.45rem 0.95rem;
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.jump-confirm-btn:hover {
+    background: rgba(16, 185, 129, 0.2);
+    border-color: var(--primary-green);
+    color: var(--emerald-bright);
+}
+
+/* Confirmation Section Card */
+.confirmation-section-card {
+    background: var(--bg-card);
+    border: 1px solid var(--dark-green-border);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+
+.sub-header-title {
+    font-family: var(--font-heading);
+    font-size: 1.15rem;
+    color: var(--text-white);
+    margin-bottom: 1rem;
+}
+
+/* Confirmations List & Cards */
+.confirmations-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.confirmation-item-card {
+    background: var(--bg-card-subtle);
+    border: 1px solid var(--dark-green-border);
+    border-radius: var(--radius-md);
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    transition: var(--transition);
+}
+
+.status-border-confirmed_authentic { border-left: 4px solid var(--verdict-authentic); }
+.status-border-confirmed_manipulated { border-left: 4px solid var(--verdict-fake); }
+.status-border-disputed { border-left: 4px solid var(--verdict-suspicious); }
+.status-border-needs_evidence { border-left: 4px solid #38BDF8; }
+
+.conf-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.reviewer-badge-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.conf-avatar {
+    font-size: 1.4rem;
+}
+
+.conf-reviewer-name {
+    display: block;
+    font-size: 1rem;
+    color: var(--text-white);
+}
+
+.conf-reviewer-role {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.pill-status-confirmed_authentic { background: var(--verdict-authentic-bg); color: var(--verdict-authentic); border: 1px solid rgba(16, 185, 129, 0.4); }
+.pill-status-confirmed_manipulated { background: var(--verdict-fake-bg); color: var(--verdict-fake); border: 1px solid rgba(239, 68, 68, 0.4); }
+.pill-status-disputed { background: var(--verdict-suspicious-bg); color: var(--verdict-suspicious); border: 1px solid rgba(245, 158, 11, 0.4); }
+.pill-status-needs_evidence { background: rgba(56, 189, 248, 0.12); color: #38BDF8; border: 1px solid rgba(56, 189, 248, 0.4); }
+
+.conf-notes {
+    color: var(--text-primary);
+    font-size: 0.92rem;
+    line-height: 1.55;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 0.85rem 1rem;
+    border-radius: var(--radius-sm);
+}
+
+.conf-checklist-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.method-mini-tag {
+    font-size: 0.72rem;
+    font-family: var(--font-mono);
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.25);
+    color: var(--emerald-bright);
+    padding: 0.2rem 0.5rem;
+    border-radius: var(--radius-sm);
+}
+
+.conf-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    border-top: 1px solid rgba(19, 78, 56, 0.4);
+    padding-top: 0.65rem;
+    font-size: 0.78rem;
+    color: var(--text-subtle);
+}
+
+.crypto-seal-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: rgba(0, 0, 0, 0.4);
+    padding: 0.2rem 0.6rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.seal-lock {
+    color: var(--emerald-bright);
+    font-weight: 700;
+}
+
+.seal-hash-short {
+    font-family: var(--font-mono);
+    color: var(--text-muted);
+}
+
+.empty-confirmations-box {
+    text-align: center;
+    padding: 2rem 1.5rem;
+    background: rgba(7, 28, 21, 0.4);
+    border: 1px dashed var(--dark-green-border);
+    border-radius: var(--radius-md);
+    margin-bottom: 2rem;
+}
+
+.empty-confirmations-box .empty-icon {
+    font-size: 2.2rem;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.empty-confirmations-box p {
+    color: var(--text-white);
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.empty-confirmations-box .empty-hint {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+/* Confirmation Form */
+.confirmation-form-container {
+    background: var(--bg-card-subtle);
+    border: 1px solid var(--dark-green-border);
+    border-radius: var(--radius-md);
+    padding: 1.75rem;
+}
+
+.form-header-intro {
+    margin-bottom: 1.5rem;
+}
+
+.form-header-intro h3 {
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+    color: var(--text-white);
+    margin-bottom: 0.35rem;
+}
+
+.form-header-intro p {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+}
+
+.form-grid-2 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.25rem;
+}
+
+.select-control {
+    cursor: pointer;
+}
+
+.select-control option {
+    background: #071C15;
+    color: #FFF;
+    padding: 0.5rem;
+}
+
+.checkbox-options-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 0.6rem;
+    background: var(--bg-input);
+    border: 1px solid var(--dark-green-border);
+    border-radius: var(--radius-md);
+    padding: 1rem;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--text-primary);
+    cursor: pointer;
+}
+
+.checkbox-label input[type="checkbox"] {
+    accent-color: var(--primary-green);
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+/* ==========================================================================
+   Certificate of Verification Page Styles
+   ========================================================================== */
+
+.certificate-page-body {
+    background: #020C09;
+    color: var(--text-primary);
+    min-height: 100vh;
+    padding: 2rem 1rem;
+}
+
+.certificate-wrapper {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.cert-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.certificate-frame {
+    background: #041812;
+    border: 3px double var(--primary-green);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 0 50px rgba(16, 185, 129, 0.25), inset 0 0 30px rgba(0, 0, 0, 0.8);
+    position: relative;
+    padding: 2.5rem;
+}
+
+.cert-inner-border {
+    border: 1px solid rgba(16, 185, 129, 0.35);
+    border-radius: var(--radius-md);
+    padding: 2rem;
+    position: relative;
+}
+
+.cert-corner {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    border: 3px solid var(--emerald-bright);
+}
+
+.cert-corner.top-left { top: 12px; left: 12px; border-right: none; border-bottom: none; }
+.cert-corner.top-right { top: 12px; right: 12px; border-left: none; border-bottom: none; }
+.cert-corner.bottom-left { bottom: 12px; left: 12px; border-right: none; border-top: none; }
+.cert-corner.bottom-right { bottom: 12px; right: 12px; border-left: none; border-top: none; }
+
+.cert-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid var(--dark-green-border);
+    padding-bottom: 1.5rem;
+}
+
+.cert-shield-svg {
+    width: 52px;
+    height: 58px;
+    margin-bottom: 0.75rem;
+    filter: drop-shadow(0 0 10px rgba(16, 185, 129, 0.6));
+}
+
+.cert-org-title {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.25em;
+    color: var(--emerald-bright);
+    font-weight: 700;
+    display: block;
+    margin-bottom: 0.4rem;
+}
+
+.cert-main-title {
+    font-family: 'Cinzel', var(--font-heading), serif;
+    font-size: 2.6rem;
+    font-weight: 800;
+    color: var(--text-white);
+    letter-spacing: 0.05em;
+    margin-bottom: 0.3rem;
+}
+
+.cert-sub-title {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.15em;
+    color: var(--text-muted);
+}
+
+.cert-meta-strip {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1rem;
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid var(--dark-green-border);
+    padding: 1rem 1.25rem;
+    border-radius: var(--radius-sm);
+    margin-bottom: 1.5rem;
+}
+
+.cert-meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.c-label {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--text-subtle);
+}
+
+.c-val {
+    font-size: 0.9rem;
+    color: var(--text-white);
+}
+
+.c-val.mono {
+    font-family: var(--font-mono);
+    color: var(--emerald-bright);
+}
+
+.badge-status {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    display: inline-block;
+    align-self: flex-start;
+}
+
+.status-confirmed_authentic { background: var(--verdict-authentic-bg); color: var(--verdict-authentic); }
+.status-confirmed_manipulated { background: var(--verdict-fake-bg); color: var(--verdict-fake); }
+.status-disputed { background: var(--verdict-suspicious-bg); color: var(--verdict-suspicious); }
+
+.cert-subject-box {
+    margin-bottom: 1.5rem;
+    background: rgba(16, 185, 129, 0.04);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    padding: 1rem 1.25rem;
+    border-radius: var(--radius-sm);
+}
+
+.cert-subject-text {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--text-white);
+    margin-top: 0.35rem;
+    line-height: 1.4;
+}
+
+.cert-determination-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.4);
+    border: 2px solid;
+    border-radius: var(--radius-md);
+    padding: 1.5rem 1.75rem;
+    margin-bottom: 1.5rem;
+    gap: 1.5rem;
+}
+
+.category-authentic.cert-determination-row { border-color: var(--primary-green); }
+.category-fake.cert-determination-row { border-color: #EF4444; }
+.category-suspicious.cert-determination-row { border-color: #F59E0B; }
+.category-unverified.cert-determination-row { border-color: #64748B; }
+
+.determination-verdict {
+    font-family: var(--font-heading);
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: var(--text-white);
+    margin: 0.2rem 0 0.4rem;
+}
+
+.determination-summary {
+    font-size: 0.92rem;
+    color: var(--text-primary);
+    line-height: 1.5;
+}
+
+.determination-score-box {
+    text-align: center;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 1rem 1.5rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--dark-green-border);
+    min-width: 140px;
+}
+
+.score-large {
+    font-family: var(--font-heading);
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: var(--emerald-bright);
+    display: block;
+}
+
+.cert-reviewer-section {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    background: rgba(7, 28, 21, 0.6);
+    border: 1px solid var(--dark-green-border);
+    padding: 1.25rem 1.5rem;
+    border-radius: var(--radius-md);
+    margin-bottom: 1.5rem;
+}
+
+.cert-seal-badge {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #064E3B 0%, #042419 100%);
+    border: 2px dashed var(--primary-green);
+    text-align: center;
+    flex-shrink: 0;
+    box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
+}
+
+.seal-icon {
+    font-size: 1.8rem;
+}
+
+.seal-text {
+    font-family: var(--font-mono);
+    font-size: 0.55rem;
+    font-weight: 800;
+    color: var(--emerald-bright);
+    letter-spacing: 0.05em;
+    line-height: 1.2;
+}
+
+.reviewer-name {
+    font-family: var(--font-heading);
+    font-size: 1.35rem;
+    color: var(--text-white);
+    margin: 0.15rem 0;
+}
+
+.reviewer-credentials {
+    font-size: 0.85rem;
+    color: var(--emerald-light);
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.peer-notes {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.cert-crypto-seal {
+    background: #020C08;
+    border: 1px solid var(--dark-green-border);
+    border-radius: var(--radius-sm);
+    padding: 1rem 1.25rem;
+    margin-bottom: 2rem;
+}
+
+.crypto-seal-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.4rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.crypto-title {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--emerald-bright);
+}
+
+.crypto-id {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--text-subtle);
+}
+
+.crypto-hash {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: #A7F3D0;
+    word-break: break-all;
+    display: block;
+    background: rgba(0, 0, 0, 0.4);
+    padding: 0.4rem 0.6rem;
+    border-radius: 4px;
+    margin-bottom: 0.35rem;
+}
+
+.crypto-subtext {
+    font-size: 0.72rem;
+    color: var(--text-subtle);
+}
+
+.cert-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    border-top: 1px solid var(--dark-green-border);
+    padding-top: 1.5rem;
+    gap: 2rem;
+}
+
+.cert-footer-info {
+    font-size: 0.75rem;
+    color: var(--text-subtle);
+    max-width: 480px;
+    line-height: 1.5;
+}
+
+.cert-signature-area {
+    text-align: center;
+    width: 200px;
+}
+
+.sign-line {
+    border-bottom: 1px solid var(--emerald-bright);
+    margin-bottom: 0.4rem;
+}
+
+.sign-label {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--text-muted);
+}
+
+/* Print Optimization */
+@media print {
+    body {
+        background: #FFF !important;
+        color: #000 !important;
+        padding: 0 !important;
+    }
+    
+    .no-print {
+        display: none !important;
+    }
+    
+    .certificate-wrapper {
+        max-width: 100% !important;
+    }
+    
+    .certificate-frame {
+        border: 2px solid #000 !important;
+        box-shadow: none !important;
+        background: #FFF !important;
+        color: #000 !important;
+        padding: 1.5rem !important;
+    }
+    
+    .cert-inner-border {
+        border-color: #666 !important;
+    }
+    
+    .cert-corner {
+        border-color: #000 !important;
+    }
+    
+    .cert-main-title, .determination-verdict, .reviewer-name, .c-val, .cert-subject-text {
+        color: #000 !important;
+    }
+    
+    .cert-meta-strip, .cert-subject-box, .cert-determination-row, .cert-reviewer-section, .cert-crypto-seal {
+        background: #F8F8F8 !important;
+        border-color: #DDD !important;
+        color: #000 !important;
+    }
+    
+    .crypto-hash {
+        color: #000 !important;
+        background: #EEE !important;
+    }
+}
+

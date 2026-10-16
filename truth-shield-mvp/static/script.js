@@ -424,4 +424,37 @@ function initReportViewer() {
         });
         activeBtn.classList.add("active");
     }
+
+    // Peer Confirmation Form Submission
+    const confirmForm = document.getElementById("peer-confirmation-form");
+    const submitConfBtn = document.getElementById("submit-confirmation-btn");
+    if (confirmForm && submitConfBtn) {
+        confirmForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+            const originalText = submitConfBtn.innerHTML;
+            submitConfBtn.innerHTML = "<span>Sealing Cryptographic Record...</span>";
+            submitConfBtn.disabled = true;
+
+            const formData = new FormData(confirmForm);
+            fetch(confirmForm.action, {
+                method: "POST",
+                body: formData,
+                headers: { "X-Requested-With": "XMLHttpRequest" }
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.reload();
+                } else if (data.error) {
+                    alert("Confirmation Error: " + data.error);
+                    submitConfBtn.innerHTML = originalText;
+                    submitConfBtn.disabled = false;
+                }
+            })
+            .catch(err => {
+                console.error("Confirmation error:", err);
+                confirmForm.submit();
+            });
+        });
+    }
 }

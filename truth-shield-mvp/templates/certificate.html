@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Certificate of Verification: {{ report.report_id }} | Truth Shield 🛡️</title>
+    <meta name="description" content="Official Certificate of Verification and Peer Investigator Confirmation issued by Truth Shield.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Outfit:wght@400;500;600;700;800&family=Cinzel:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="certificate-page-body">
+    <div class="ambient-glow no-print"></div>
+
+    <!-- Certificate Container -->
+    <div class="certificate-wrapper">
+        <!-- Top Toolbar (Hidden on Print) -->
+        <div class="cert-toolbar no-print">
+            <a href="/report/{{ report.report_id }}" class="secondary-btn">← Return to Full Dossier</a>
+            <div class="cert-actions">
+                <button type="button" class="primary-btn" onclick="window.print()">
+                    🖨️ Print / Save as PDF
+                </button>
+            </div>
+        </div>
+
+        <!-- Printable Certificate Card -->
+        <div class="certificate-frame">
+            <div class="cert-corner top-left"></div>
+            <div class="cert-corner top-right"></div>
+            <div class="cert-corner bottom-left"></div>
+            <div class="cert-corner bottom-right"></div>
+
+            <div class="cert-inner-border">
+                <!-- Header -->
+                <header class="cert-header">
+                    <div class="cert-emblem">
+                        <svg class="cert-shield-svg" viewBox="0 0 32 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M16 1.5L2 6.5V17.5C2 26.5 8 32.5 16 35C24 32.5 30 26.5 30 17.5V6.5L16 1.5Z" fill="url(#cert-shield-grad)" stroke="#10B981" stroke-width="2"/>
+                            <path d="M16 9V27M10 17H22" stroke="#A7F3D0" stroke-width="2" stroke-linecap="round"/>
+                            <circle cx="16" cy="17" r="4.5" fill="#047857" stroke="#34D399" stroke-width="1.5"/>
+                            <defs>
+                                <linearGradient id="cert-shield-grad" x1="16" y1="2" x2="16" y2="34" gradientUnits="userSpaceOnUse">
+                                    <stop stop-color="#064E3B"/>
+                                    <stop offset="1" stop-color="#062419"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </div>
+                    <span class="cert-org-title">TRUTH SHIELD FORENSIC ALLIANCE</span>
+                    <h1 class="cert-main-title">Certificate of Verification</h1>
+                    <span class="cert-sub-title">PEER-INVESTIGATED MEDIA AUTHENTICITY AUDIT</span>
+                </header>
+
+                <!-- Certificate Metadata Row -->
+                <div class="cert-meta-strip">
+                    <div class="cert-meta-item">
+                        <span class="c-label">REPORT IDENTIFIER</span>
+                        <strong class="c-val mono">{{ report.report_id }}</strong>
+                    </div>
+                    <div class="cert-meta-item">
+                        <span class="c-label">MEDIA TYPE</span>
+                        <strong class="c-val uppercase">{{ report.media_type }}</strong>
+                    </div>
+                    <div class="cert-meta-item">
+                        <span class="c-label">ISSUANCE TIMESTAMP</span>
+                        <strong class="c-val">{{ report.confirmed_at or report.created_at }}</strong>
+                    </div>
+                    <div class="cert-meta-item">
+                        <span class="c-label">CONFIRMATION STATE</span>
+                        <strong class="c-val badge-status status-{{ report.confirmation_status|lower }}">
+                            {{ report.confirmation_status or 'UNCONFIRMED' }}
+                        </strong>
+                    </div>
+                </div>
+
+                <!-- Subject Investigated -->
+                <div class="cert-subject-box">
+                    <span class="c-label">AUDITED STATEMENT / MEDIA ARTIFACT</span>
+                    <p class="cert-subject-text">"{{ report.claim_or_title }}"</p>
+                </div>
+
+                <!-- Determination & Confidence -->
+                <div class="cert-determination-row category-{{ report.verdict_category }}">
+                    <div class="determination-box">
+                        <span class="c-label">OFFICIAL VERIFICATION DETERMINATION</span>
+                        <h2 class="determination-verdict">{{ report.verdict }}</h2>
+                        <p class="determination-summary">{{ report.summary }}</p>
+                    </div>
+                    <div class="determination-score-box">
+                        <span class="c-label">EMPIRICAL CONFIDENCE</span>
+                        <span class="score-large">{{ report.confidence_score }}%</span>
+                    </div>
+                </div>
+
+                <!-- Peer Investigator Review Information -->
+                {% if report.confirmations %}
+                    {% set latest_conf = report.confirmations[0] %}
+                    <div class="cert-reviewer-section">
+                        <div class="cert-seal-badge">
+                            <span class="seal-icon">🛡️</span>
+                            <span class="seal-text">VERIFIED & CONFIRMED</span>
+                        </div>
+                        <div class="reviewer-details">
+                            <span class="c-label">PRIMARY CONFIRMING INVESTIGATOR</span>
+                            <h3 class="reviewer-name">{{ latest_conf.reviewer_name }}</h3>
+                            <span class="reviewer-credentials">{{ latest_conf.reviewer_role }} • {{ latest_conf.organization }}</span>
+                            <div class="peer-notes">
+                                <em>"{{ latest_conf.peer_review_notes }}"</em>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Digital Cryptographic Fingerprint Seal -->
+                    <div class="cert-crypto-seal">
+                        <div class="crypto-seal-header">
+                            <span class="crypto-title">🔒 TAMPER-EVIDENT CRYPTOGRAPHIC SEAL (SHA-256)</span>
+                            <span class="crypto-id">CONFIRMATION ID: {{ latest_conf.confirmation_id }}</span>
+                        </div>
+                        <code class="crypto-hash">{{ latest_conf.digital_signature }}</code>
+                        <span class="crypto-subtext">This SHA-256 digital fingerprint guarantees the immutability of this peer review record in the Truth Shield audit registry.</span>
+                    </div>
+                {% else %}
+                    <div class="cert-reviewer-section unconfirmed-section">
+                        <p>This report has completed automated algorithmic verification and is currently awaiting peer investigator sign-off.</p>
+                    </div>
+                {% endif %}
+
+                <!-- Footer Signatures & Legal Disclaimer -->
+                <footer class="cert-footer">
+                    <div class="cert-footer-info">
+                        <p>Issued by Truth Shield Open Verification Network. Audited against International Fact-Checking Network (IFCN) standards, Error Level Analysis (ELA) compression models, and OpenCV frame metrics.</p>
+                    </div>
+                    <div class="cert-signature-area">
+                        <div class="sign-line"></div>
+                        <span class="sign-label">Authorized Verification Seal</span>
+                    </div>
+                </footer>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

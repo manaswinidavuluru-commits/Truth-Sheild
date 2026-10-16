@@ -18,7 +18,7 @@ ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 sys.path.insert(0, ROOT_DIR)
 
 from app import app
-from database.db import save_report, get_report, get_recent_reports, init_db
+from database.db import save_report, get_report, get_recent_reports, init_db, add_confirmation, get_confirmations_for_report
 from services.factcheck import analyze_linguistics, verify_news_claim
 from services.forensics import run_image_investigation, run_video_investigation
 
@@ -131,6 +131,74 @@ class TestTruthShield(unittest.TestCase):
         self.assertEqual(r_api.status_code, 200)
         api_data = json.loads(r_api.data)
         self.assertIn("reports", api_data)
+
+    def test_confirmation_lifecycle(self):
+        """Tests adding investigator confirmations with cryptographic SHA-256 digital seals."""
+        report_id = save_report(
+            claim_or_title="Breaking News for Peer Audit",
+            media_type="news",
+            verdict="Debunked / Misleading",
+            verdict_category="fake",
+            confidence_score=90,
+            summary="Tested claim summary",
+            evidence_data=[],
+            limitations="Limitations statement"
+        )
+        
+        # Add confirmation
+        conf = add_confirmation(
+            report_id=report_id,
+            reviewer_name="Dr. Jane Doe",
+            reviewer_role="Lead OSINT Analyst",
+            organization="Global Disinformation Index",
+            confirmation_status="CONFIRMED_MANIPULATED",
+            peer_review_notes="Verified via cross-referencing and image ELA.",
+            methodology_checklist=["Primary Source Verification", "Error Level Analysis (ELA)"]
+        )
+        self.assertTrue(conf["confirmation_id"].startswith("CF-"))
+        self.assertEqual(len(conf["digital_signature"]), 64) # SHA-256 is 64 hex characters
+        
+        # Verify report status was updated
+        rep = get_report(report_id)
+        self.assertEqual(rep["confirmation_status"], "CONFIRMED_MANIPULATED")
+        self.assertEqual(len(rep["confirmations"]), 1)
+        self.assertEqual(rep["confirmations"][0]["reviewer_name"], "Dr. Jane Doe")
+
+    def test_confirmation_http_endpoints(self):
+        """Tests submitting confirmation via POST and viewing the Certificate page."""
+        report_id = save_report(
+            claim_or_title="Test for HTTP Confirmation",
+            media_type="image",
+            verdict="Verified Authentic",
+            verdict_category="authentic",
+            confidence_score=85,
+            summary="Original authentic photo",
+            evidence_data=[],
+            limitations="None"
+        )
+        
+        # POST confirmation
+        r_post = self.client.post(
+            f"/report/{report_id}/confirm",
+            data={
+                "reviewer_name": "Marcus Vance",
+                "reviewer_role": "Senior Photojournalist",
+                "organization": "Reuters News Agency",
+                "confirmation_status": "CONFIRMED_AUTHENTIC",
+                "peer_review_notes": "Confirmed authentic capture from original camera RAW archive.",
+                "methodology[]": ["EXIF Metadata Audit", "Error Level Analysis (ELA)"]
+            },
+            headers={"X-Requested-With": "XMLHttpRequest"}
+        )
+        self.assertEqual(r_post.status_code, 200)
+        post_data = json.loads(r_post.data)
+        self.assertTrue(post_data.get("success"))
+        
+        # View Certificate
+        r_cert = self.client.get(f"/report/{report_id}/certificate")
+        self.assertEqual(r_cert.status_code, 200)
+        self.assertIn(b"Certificate of Verification", r_cert.data)
+        self.assertIn(b"Marcus Vance", r_cert.data)
 
 if __name__ == "__main__":
     unittest.main()

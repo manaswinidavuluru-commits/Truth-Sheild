@@ -28,7 +28,13 @@
    - Stores report metadata and findings in a local SQLite database (`database/truth_shield.db`).
    - One-click **JSON Export**, **Printable Dossier**, and **Shareable URL**.
 
-5. **🔒 Security, Privacy & Resource Cleanup**:
+5. **⚖️ Investigator Peer Confirmation & Cryptographic Seal**:
+   - **Human-in-the-Loop Review**: Credentialed investigators and journalists can certify, qualify, or dispute automated verdicts.
+   - **Confirmation Determinations**: `CONFIRMED_AUTHENTIC`, `CONFIRMED_MANIPULATED`, `CONFIRMED_UNVERIFIED`, `DISPUTED`, or `NEEDS_EVIDENCE`.
+   - **Cryptographic Seal (SHA-256)**: Every confirmation review is stamped with an immutable tamper-evident SHA-256 digital signature.
+   - **📜 Official Certificate of Verification**: Generates an authoritative, printable certificate with the investigator seal, audit chain, and verification metrics.
+
+6. **🔒 Security, Privacy & Resource Cleanup**:
    - Validates file extensions and enforces size limits (16MB image / 50MB video).
    - **Deletes temporary uploaded raw files** immediately after forensic metrics and preview thumbnails are computed.
    - Built-in environment variable configuration (`.env`).
@@ -40,12 +46,12 @@
 ```text
 truth-shield-mvp/
 ├── app.py                      # Flask backend application & routing
-├── requirements.txt            # Python dependencies
+├── requirements.txt            # Python dependencies (includes gunicorn for deployment)
 ├── .env                        # Environment configuration (API keys, ports)
 ├── README.md                   # Documentation & setup instructions
 ├── create_sample_assets.py     # Script generating demo test images & video
 ├── database/
-│   ├── db.py                   # SQLite schema & report persistence
+│   ├── db.py                   # SQLite schema, confirmations & report persistence
 │   └── truth_shield.db         # Auto-generated SQLite database
 ├── services/
 │   ├── factcheck.py            # News verification & fact-check integration
@@ -57,7 +63,8 @@ truth-shield-mvp/
 │   └── samples/                # Preset sample test media
 ├── templates/
 │   ├── index.html              # Homepage with 3-tab forensic terminal
-│   └── results.html            # Evidence dossier & forensic report view
+│   ├── results.html            # Evidence dossier, ELA viewer & confirmation ledger
+│   └── certificate.html        # Official Certificate of Verification (printable)
 └── uploads/
     ├── temp/                   # Temporary directory (auto-purged after analysis)
     └── forensics/              # Generated ELA maps & keyframe thumbnails
